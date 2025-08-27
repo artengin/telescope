@@ -12,6 +12,7 @@ import indexScreen from './components/IndexScreen.vue';
 import previewScreen from './components/PreviewScreen.vue';
 import alert from './components/Alert.vue';
 import copyClipboard from './components/CopyClipboard.vue';
+import entriesCount from './entriesCount';
 
 import 'bootstrap';
 
@@ -69,18 +70,35 @@ new Vue({
             autoLoadsNewEntries: localStorage.autoLoadsNewEntries === '1',
 
             recording: Telescope.recording,
+
+            requestsCount: 0,
+            commandsCount: 0,
+            
+            entriesCountTimeout: null,
+            entriesCountTimer: 2500,
         };
     },
 
     created() {
         window.addEventListener('keydown', this.keydownListener);
+
+        if (typeof this.loadEntriesCount === 'function') {
+            this.loadEntriesCount();
+            this.scheduleEntriesCount();
+        }
     },
 
     destroyed() {
         window.removeEventListener('keydown', this.keydownListener);
+
+        if (typeof this.clearEntriesCountTimeout === 'function') {
+            this.clearEntriesCountTimeout();
+        }
     },
 
     methods: {
+    ...entriesCount.methods,
+
         autoLoadNewEntries() {
             if (!this.autoLoadsNewEntries) {
                 this.autoLoadsNewEntries = true;

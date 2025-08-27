@@ -110,6 +110,19 @@ class DatabaseEntriesRepository implements Contract, ClearableRepository, Prunab
     }
 
     /**
+     * Count the number of entries of a specific type.
+     *
+     * @param string $type
+     * @return int
+     */
+    public function getCount($type): int
+    {
+        return $this->table('telescope_entries')
+                    ->where('type', $type)
+                    ->count();
+    }
+
+    /**
      * Counts the occurences of an exception.
      *
      * @param  \Laravel\Telescope\IncomingEntry  $exception
